@@ -1,0 +1,375 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>School Management System</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.1/font/bootstrap-icons.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Poppins', sans-serif; }
+        .draggable { cursor: move; }
+        .time-slot.active { background-color: #e2e8f0; }
+    </style>
+</head>
+<body class="bg-gray-50">
+    <div class="min-h-screen">
+        <!-- Navigation -->
+        <nav class="bg-blue-600 text-white shadow-lg">
+            <div class="container mx-auto px-4">
+                <div class="flex justify-between items-center py-4">
+                    <h1 class="text-xl font-bold">School Management System</h1>
+                    <div class="space-x-4">
+                        <button onclick="showSection('dashboard')" class="hover:bg-blue-700 px-3 py-2 rounded">Dashboard</button>
+                        <button onclick="showSection('teachers')" class="hover:bg-blue-700 px-3 py-2 rounded">Teachers</button>
+                        <button onclick="showSection('students')" class="hover:bg-blue-700 px-3 py-2 rounded">Students</button>
+                        <button onclick="showSection('courses')" class="hover:bg-blue-700 px-3 py-2 rounded">Courses</button>
+                        <button onclick="showSection('timetable')" class="hover:bg-blue-700 px-3 py-2 rounded">Timetable</button>
+                    </div>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Main Content -->
+        <main class="container mx-auto px-4 py-8">
+            <!-- Dashboard Section -->
+            <section id="dashboard" class="space-y-6">
+                <h2 class="text-2xl font-bold text-gray-800">Dashboard</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold">Total Teachers</h3>
+                        <p class="text-3xl font-bold text-blue-600">12</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold">Total Students</h3>
+                        <p class="text-3xl font-bold text-blue-600">150</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold">Total Courses</h3>
+                        <p class="text-3xl font-bold text-blue-600">8</p>
+                    </div>
+                    <div class="bg-white p-6 rounded-lg shadow-md">
+                        <h3 class="text-lg font-semibold">Active Semesters</h3>
+                        <p class="text-3xl font-bold text-blue-600">2</p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Teachers Section -->
+            <section id="teachers" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Teachers Management</h2>
+                    <button onclick="showModal('addTeacherModal')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        Add Teacher
+                    </button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Subject</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="teachersList">
+                            <!-- JavaScript will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Students Section -->
+            <section id="students" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Students Management</h2>
+                    <button onclick="showModal('addStudentModal')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        Add Student
+                    </button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Class</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="studentsList">
+                            <!-- JavaScript will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Courses Section -->
+            <section id="courses" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Courses Management</h2>
+                    <button onclick="showModal('addCourseModal')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                        Add Course
+                    </button>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">ID</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Course Name</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Semester</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-gray-200" id="coursesList">
+                            <!-- JavaScript will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+
+            <!-- Timetable Section -->
+            <section id="timetable" class="hidden space-y-6">
+                <div class="flex justify-between items-center">
+                    <h2 class="text-2xl font-bold text-gray-800">Weekly Timetable</h2>
+                    <div class="space-x-2">
+                        <button onclick="showModal('addTimeSlotModal')" class="bg-blue-600 text-white px-4 py-2 rounded-lg">
+                            Add Time Slot
+                        </button>
+                        <select id="weekSelect" class="border rounded-lg px-4 py-2" onchange="changeWeek()">
+                            <option value="1">Week 1</option>
+                            <option value="2">Week 2</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="bg-white rounded-lg shadow-md overflow-x-auto">
+                    <table class="w-full table-auto">
+                        <thead class="bg-gray-50">
+                            <tr>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Time</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Monday</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Tuesday</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Wednesday</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Thursday</th>
+                                <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Friday</th>
+                            </tr>
+                        </thead>
+                        <tbody id="timetableBody">
+                            <!-- JavaScript will populate this -->
+                        </tbody>
+                    </table>
+                </div>
+            </section>
+        </main>
+
+        <!-- Modals -->
+        <!-- Add Teacher Modal -->
+        <div id="addTeacherModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Teacher</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <input type="text" id="teacherName" placeholder="Teacher Name" class="w-full px-3 py-2 border rounded-lg">
+                        <input type="text" id="teacherSubject" placeholder="Subject" class="w-full px-3 py-2 border rounded-lg mt-3">
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <button id="addTeacherBtn" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Add Teacher
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Student Modal -->
+        <div id="addStudentModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Student</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <input type="text" id="studentName" placeholder="Student Name" class="w-full px-3 py-2 border rounded-lg">
+                        <input type="text" id="studentClass" placeholder="Class" class="w-full px-3 py-2 border rounded-lg mt-3">
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <button id="addStudentBtn" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Add Student
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Add Course Modal -->
+        <div id="addCourseModal" class="hidden fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full">
+            <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+                <div class="mt-3 text-center">
+                    <h3 class="text-lg leading-6 font-medium text-gray-900">Add New Course</h3>
+                    <div class="mt-2 px-7 py-3">
+                        <input type="text" id="courseName" placeholder="Course Name" class="w-full px-3 py-2 border rounded-lg">
+                        <select id="courseSemester" class="w-full px-3 py-2 border rounded-lg mt-3">
+                            <option value="">Select Semester</option>
+                            <option value="1">Semester 1</option>
+                            <option value="2">Semester 2</option>
+                        </select>
+                    </div>
+                    <div class="items-center px-4 py-3">
+                        <button id="addCourseBtn" class="px-4 py-2 bg-blue-600 text-white text-base font-medium rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            Add Course
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Data storage
+        let teachers = [];
+        let students = [];
+        let courses = [];
+        let timetable = {};
+
+        // Navigation
+        function showSection(sectionId) {
+            document.querySelectorAll('main section').forEach(section => {
+                section.classList.add('hidden');
+            });
+            document.getElementById(sectionId).classList.remove('hidden');
+        }
+
+        // Modal handling
+        function showModal(modalId) {
+            document.getElementById(modalId).classList.remove('hidden');
+        }
+
+        function hideModal(modalId) {
+            document.getElementById(modalId).classList.add('hidden');
+        }
+
+        // Teachers
+        document.getElementById('addTeacherBtn').addEventListener('click', () => {
+            const name = document.getElementById('teacherName').value;
+            const subject = document.getElementById('teacherSubject').value;
+            if (name && subject) {
+                teachers.push({ id: teachers.length + 1, name, subject });
+                updateTeachersList();
+                hideModal('addTeacherModal');
+            }
+        });
+
+        function updateTeachersList() {
+            const tbody = document.getElementById('teachersList');
+            tbody.innerHTML = teachers.map(teacher => `
+                <tr>
+                    <td class="px-6 py-4">${teacher.id}</td>
+                    <td class="px-6 py-4">${teacher.name}</td>
+                    <td class="px-6 py-4">${teacher.subject}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="deleteTeacher(${teacher.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Students
+        document.getElementById('addStudentBtn').addEventListener('click', () => {
+            const name = document.getElementById('studentName').value;
+            const className = document.getElementById('studentClass').value;
+            if (name && className) {
+                students.push({ id: students.length + 1, name, class: className });
+                updateStudentsList();
+                hideModal('addStudentModal');
+            }
+        });
+
+        function updateStudentsList() {
+            const tbody = document.getElementById('studentsList');
+            tbody.innerHTML = students.map(student => `
+                <tr>
+                    <td class="px-6 py-4">${student.id}</td>
+                    <td class="px-6 py-4">${student.name}</td>
+                    <td class="px-6 py-4">${student.class}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="deleteStudent(${student.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Courses
+        document.getElementById('addCourseBtn').addEventListener('click', () => {
+            const name = document.getElementById('courseName').value;
+            const semester = document.getElementById('courseSemester').value;
+            if (name && semester) {
+                courses.push({ id: courses.length + 1, name, semester });
+                updateCoursesList();
+                hideModal('addCourseModal');
+            }
+        });
+
+        function updateCoursesList() {
+            const tbody = document.getElementById('coursesList');
+            tbody.innerHTML = courses.map(course => `
+                <tr>
+                    <td class="px-6 py-4">${course.id}</td>
+                    <td class="px-6 py-4">${course.name}</td>
+                    <td class="px-6 py-4">Semester ${course.semester}</td>
+                    <td class="px-6 py-4">
+                        <button onclick="deleteCourse(${course.id})" class="text-red-600 hover:text-red-900">Delete</button>
+                    </td>
+                </tr>
+            `).join('');
+        }
+
+        // Timetable
+        function initializeTimetable() {
+            const timeSlots = ['8:00 - 9:00', '9:00 - 10:00', '10:00 - 11:00', '11:00 - 12:00', '1:00 - 2:00', '2:00 - 3:00'];
+            const tbody = document.getElementById('timetableBody');
+            tbody.innerHTML = timeSlots.map(time => `
+                <tr>
+                    <td class="px-6 py-4">${time}</td>
+                    <td class="px-6 py-4 time-slot" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                    <td class="px-6 py-4 time-slot" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                    <td class="px-6 py-4 time-slot" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                    <td class="px-6 py-4 time-slot" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                    <td class="px-6 py-4 time-slot" ondrop="drop(event)" ondragover="allowDrop(event)"></td>
+                </tr>
+            `).join('');
+        }
+
+        function allowDrop(ev) {
+            ev.preventDefault();
+        }
+
+        function drop(ev) {
+            ev.preventDefault();
+            const data = ev.dataTransfer.getData("text");
+            const subject = document.createElement('div');
+            subject.className = 'bg-blue-100 p-2 rounded';
+            subject.textContent = data;
+            if (ev.target.classList.contains('time-slot')) {
+                ev.target.innerHTML = '';
+                ev.target.appendChild(subject);
+            }
+        }
+
+        // Initialize
+        showSection('dashboard');
+        initializeTimetable();
+
+        // Close modals when clicking outside
+        window.onclick = function(event) {
+            const modals = document.querySelectorAll('[id$="Modal"]');
+            modals.forEach(modal => {
+                if (event.target == modal) {
+                    modal.classList.add('hidden');
+                }
+            });
+        }
+    </script>
+<script>document.body.addEventListener('wheel', e => { if (!e.ctrlKey) return; e.preventDefault(); return }, { passive: false })</script>
+	</body>
+</html>
